@@ -1,0 +1,19 @@
+# MNIST文件所在路径与名称
+train_images_file = "./data/train-images-idx3-ubyte"
+train_labels_file = "./data/train-labels-idx1-ubyte"
+test_images_file = "./data/t10k-images-idx3-ubyte"
+test_labels_file = "./data/t10k-labels-idx1-ubyte"
+
+# MNIST数据相关参数
+train_numbers = 60000
+test_numbers = 10000
+image_pixels = 784
+
+# 神经网络结构
+layers = 2  # 神经网络层数
+neurones = "784, 50, 10"  # 神经网络中各层神经元个数
+
+# 训练相关参数
+iterations = 10000  # 训练次数
+batches = 100  # 每次训练样本数
+learning_rate = 0.01  # 学习率
