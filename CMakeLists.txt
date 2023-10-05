@@ -13,4 +13,5 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 # 设置可执行文件的生成
 add_executable(training
                src/main.c
-               src/file_handling/src/file_handling.c)
+               src/file_handling/src/file_handling.c
+               src/lexical_analysis/src/lexical_analysis.c)

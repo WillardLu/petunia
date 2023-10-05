@@ -32,11 +32,7 @@ int main(int argc, char *argv[]) {
     free(contents);
     return -1;
   }
-  printf("-------------- 文件内容 --------------\n");
-  printf("%s\n", contents);
-  printf("-------------------------------------\n\n");
-  // 解析
-  // TOMLParser(content);
+  
   free(contents);
   return 0;
 }
