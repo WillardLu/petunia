@@ -2,3 +2,15 @@
 
 
 \section{状态转换图}
+
+
+\subsection{注释}
+\begin{tikzpicture}[node distance=9em]
+  \node[state,initial]    (s101)               {$101$};
+  \node[state]            (s102)[right=of s101]{$102$};
+  \node[state, accepting] (s103)[right=of s102]{$103$};
+  \path[->](s101) edge [loop above] node {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+                 edge node [above] {\#} (s102)
+           (s102) edge [loop above] node[text width=12em, align=center] {characters containing tabs but no other control characters($\backslash$0x00$\sim\backslash$0x08, $\backslash$ 0x0A$\sim\backslash$0x1F, $\backslash$0x7F)} ()
+                  edge node[above] {$\backslash$n} (s103);
+\end{tikzpicture}
