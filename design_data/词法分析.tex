@@ -4,13 +4,53 @@
 \section{状态转换图}
 
 
-\subsection{注释}
-\begin{tikzpicture}[node distance=9em]
-  \node[state,initial]    (s101)               {$101$};
-  \node[state]            (s102)[right=of s101]{$102$};
-  \node[state, accepting] (s103)[right=of s102]{$103$};
-  \path[->](s101) edge [loop above] node {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
-                 edge node [above] {\#} (s102)
-           (s102) edge [loop above] node[text width=12em, align=center] {characters containing tabs but no other control characters($\backslash$0x00$\sim\backslash$0x08, $\backslash$ 0x0A$\sim\backslash$0x1F, $\backslash$0x7F)} ()
-                  edge node[above] {$\backslash$n} (s103);
+\subsection{注释（comment）}
+\begin{tikzpicture}[node distance=9em, align=center]
+  \node[state,initial]    (s001)               {$001$};
+  \node[state]            (s101)[right=of s001]{$101$};
+  \node[state, accepting] (s102)[right=of s101]{$102$};
+  \path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+                 edge node [above] {\#} (s101)
+           (s101) edge [loop above] node[text width=12em] {characters containing tabs but no other control characters($\backslash$0x00$\sim\backslash$0x08, $\backslash$ 0x0A$\sim\backslash$0x1F, $\backslash$0x7F)} ()
+                  edge node[above] {$\backslash$n} (s102);
 \end{tikzpicture}
+
+
+\subsection{祼键（bare key）}
+\begin{tikzpicture}[align=center]
+  \node[state,initial]    (s001)               {$001$};
+  \node[state]            (s201)[right=7em of s001]{$201$};
+  \node[state, accepting] (s202)[right=12em of s201]{$202$};
+  \path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+                  edge node [above, text width=7em] {letter, \_, digit, -} (s201)
+           (s201) edge [loop above] node[text width=5em] {letter, \_, digit, -}()
+                  edge node[above, text width=12em] {character that are not letter, digit, underscore, and dash.} (s202);
+\end{tikzpicture}
+
+
+\subsection{等号（=）}
+\begin{tikzpicture}[align=center]
+  \node[state,initial]    (s001)               {$001$};
+  \node[state]            (s301)[right=of s001]{$301$};
+  \node[state, accepting] (s302)[right=of s301]{$302$};
+  \path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+                  edge node [above] {=} (s301)
+           (s301) edge node[above] {all} (s302);
+\end{tikzpicture}
+
+
+\subsection{字符串（string）}
+\begin{tikzpicture}[align=center]
+  \node[state,initial]    (s001)               {$001$};
+  \node[state]            (s401)[right=6em of s001]{$401$};
+  \node[state]            (s402)[below=8ex of s401]{$402$};
+  \node[state, accepting] (s403)[right=6em of s401]{$403$};
+  \path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+                  edge node [above] {"} (s401)
+           (s401) edge [loop above] node[text width=10em] {character that are not ", $\backslash$, $\backslash$0x00$\sim\backslash$0x08, $\backslash$0x0A$\sim\backslash$0x1F, $\backslash$0x7F}()
+                  edge [bend right] node[left] {$\backslash$}(s402)
+                  edge node[above] {"} (s403)
+           (s402) edge [bend right] node[right] {$\backslash$, "}(s401);
+\end{tikzpicture}
+
+按照当前的实际需要，暂时不支持多行字符串，另外转义字符目前也只支持反斜杠和双引号。
