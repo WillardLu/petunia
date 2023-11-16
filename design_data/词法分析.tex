@@ -5,6 +5,7 @@
 
 
 \subsection{注释（comment）}
+\noindent
 \begin{tikzpicture}[node distance=9em, align=center]
   \node[state,initial]    (s001)               {$001$};
   \node[state]            (s101)[right=of s001]{$101$};
@@ -17,6 +18,7 @@
 
 
 \subsection{祼键（bare key）}
+\noindent
 \begin{tikzpicture}[align=center]
   \node[state,initial]    (s001)               {$001$};
   \node[state]            (s201)[right=7em of s001]{$201$};
@@ -29,6 +31,7 @@
 
 
 \subsection{等号（=）}
+\noindent
 \begin{tikzpicture}[align=center]
   \node[state,initial]    (s001)               {$001$};
   \node[state]            (s301)[right=of s001]{$301$};
@@ -40,6 +43,7 @@
 
 
 \subsection{字符串（string）}
+\noindent
 \begin{tikzpicture}[align=center]
   \node[state,initial]    (s001)               {$001$};
   \node[state]            (s401)[right=6em of s001]{$401$};
@@ -54,3 +58,72 @@
 \end{tikzpicture}
 
 按照当前的实际需要，暂时不支持多行字符串，另外转义字符目前也只支持反斜杠和双引号。
+
+
+\subsection{整数（integer）}
+\noindent
+\begin{tikzpicture}[align=center]
+  \node[state,initial]    (s001)               {$001$};
+  \node[state]            (s501)[right=6em of s001]{$501$};
+  \node[state]            (s502)[below=8ex of s501]{$502$};
+  \node[state, accepting] (s503)[right=8em of s501]{$503$};
+  \path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+                  edge node [above] {digit, +, -} (s501)
+           (s501) edge [loop above] node {digit}()
+                  edge [bend right] node[left] {underline}(s502)
+                  edge node[above, text width=8em] {non-numeric characters} (s503)
+           (s502) edge [bend right] node[right] {digit}(s501);
+\end{tikzpicture}
+
+目前暂时不支持16进制、8进制。
+
+
+\subsection{浮点数（fractional）}
+\noindent
+\begin{tikzpicture}[align=center]
+  \node[state,initial]    (s001)               {$001$};
+  \node[state]            (s501)[right=4em of s001]{$501$};
+  \node[state]            (s502)[below=8ex of s501]{$502$};
+  \node[state]            (s601)[right=5em of s501]{$601$};
+  \node[state, accepting] (s602)[right=6em of s601]{$602$};
+  \node[state]            (s603)[below=8ex of s601]{$603$};
+  \node[state]            (s604)[right=6em of s603]{$604$};
+  \node[state, accepting] (s605)[right=6em of s604]{$605$};
+  \node[state]            (s606)[below right=4em of s603]{$606$};
+  \path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+                  edge node[above, text width=4em] {digit, +, -} (s501)
+           (s501) edge [loop above] node {digit}()
+                  edge [bend right] node[left] {underline}(s502)
+                  edge node[above, text width=4em] {decimal point} (s601)
+           (s502) edge [bend right] node[right] {digit}(s501)
+           (s601) edge node[above, text width=6em] {characters other than digits, E, e} (s602)
+                  edge node[right] {E, e} (s603)
+           (s603) edge node[above] {digit} (s604)
+                  edge node[right] {+, -} (s606)
+           (s606) edge node[right] {digit} (s604)
+           (s604) edge node[above, text width=6em] {characters other than digits, E, e} (s605);
+\end{tikzpicture}
+
+
+\subsection{数组（array）}
+左中括号：
+
+\begin{tikzpicture}[align=center]
+  \node[state,initial]    (s001)               {$001$};
+  \node[state]            (s701)[right=of s001]{$701$};
+  \node[state, accepting] (s702)[right=of s701]{$702$};
+  \path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+                  edge node [above] {[} (s701)
+           (s701) edge node [above] {all} (s702);
+\end{tikzpicture}
+
+右中括号：
+
+\begin{tikzpicture}[align=center]
+  \node[state,initial]    (s001)               {$001$};
+  \node[state]            (s703)[right=of s001]{$703$};
+  \node[state, accepting] (s704)[right=of s703]{$704$};
+  \path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+                  edge node [above] {]} (s703)
+           (s703) edge node [above] {all} (s704);
+\end{tikzpicture}
