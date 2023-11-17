@@ -105,7 +105,7 @@
 \end{tikzpicture}
 
 
-\subsection{数组（array）}
+\subsection{界符}
 左中括号：
 
 \begin{tikzpicture}[align=center]
@@ -126,4 +126,26 @@
   \path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
                   edge node [above] {]} (s703)
            (s703) edge node [above] {all} (s704);
+\end{tikzpicture}
+
+逗号：
+
+\begin{tikzpicture}[align=center]
+	\node[state,initial]    (s001)               {$001$};
+	\node[state]            (s705)[right=of s001]{$705$};
+	\node[state, accepting] (s706)[right=of s703]{$706$};
+	\path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+	edge node [above] {,} (s705)
+	(s703) edge node [above] {all} (s706);
+\end{tikzpicture}
+
+
+\subsection{运算符}
+\begin{tikzpicture}[align=center]
+	\node[state,initial]    (s001)               {$001$};
+	\node[state]            (s801)[right=of s001]{$801$};
+	\node[state, accepting] (s802)[right=of s801]{$802$};
+	\path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
+	edge node [above] {=} (s801)
+	(s703) edge node [above] {all} (s802);
 \end{tikzpicture}
