@@ -141,3 +141,26 @@
 	(s703) edge node [above] {all} (s706);
 \end{tikzpicture}
 
+
+\section{用于TOML状态转换表解析的状态转换图}
+这个标题有些绕，实际对应的是上一节的内容。上一节的状态转换图最后是要用一张状态转换表（这里使用CSV文件）来实现的，那么这张表在程序读入时，需要把表文件中的内容转换保存在C语言的数组中。但是，因为这张表文件的内容会包含不能被直接转换的内容，比如一些不可见的控制字符，所以就需要做一些加工转换。这样一来，在我们的程序中就又增加了一个词法分析，只是比较简单，并且在具体实现时将不再把这个转换规则以外部文件的形式存放，而是直接编写在程序中。
+
+这里的状态转换，核心部分就是转义字符的处理。
+
+\begin{tikzpicture}[align=center, node distance=6em]
+	\node[state,initial]    (s001)               {$001$};
+	\node[state]            (s101)[right=of s001]{$101$};
+	\node[state, accepting] (s102)[right=of s101]{$102$};
+	\node[state, accepting] (s103)[below=2ex of s102]{$103$};
+	\node[state, accepting] (s104)[below=2ex of s103]{$104$};
+	\node[state, accepting] (s105)[below=2ex of s104]{$105$};
+	\node[state, accepting] (s106)[below=2ex of s105]{$106$};
+	\node[state, accepting] (s107)[below=2ex of s106]{$107$};
+	\path[->](s001) edge node[above] {$\backslash$} (s101)
+	                edge[bend right] node[right] {other} (s107)
+	         (s101) edge node[above] {t} (s102)
+	                edge[bend right] node[above] {n} (s103)
+	                edge[bend right] node[above] {r} (s104)
+	                edge[bend right] node[above] {"} (s105)
+	                edge[bend right] node[above] {$\backslash$} (s106);
+\end{tikzpicture}
