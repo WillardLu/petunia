@@ -30,7 +30,9 @@
 \end{tikzpicture}
 
 
-\subsection{等号（=）}
+\subsection{运算符}
+等号（＝）：
+
 \noindent
 \begin{tikzpicture}[align=center]
   \node[state,initial]    (s001)               {$001$};
@@ -139,13 +141,3 @@
 	(s703) edge node [above] {all} (s706);
 \end{tikzpicture}
 
-
-\subsection{运算符}
-\begin{tikzpicture}[align=center]
-	\node[state,initial]    (s001)               {$001$};
-	\node[state]            (s801)[right=of s001]{$801$};
-	\node[state, accepting] (s802)[right=of s801]{$802$};
-	\path[->](s001) edge [loop above] node[text width=5em] {space, $\backslash$t, $\backslash$n, $\backslash$r} ()
-	edge node [above] {=} (s801)
-	(s703) edge node [above] {all} (s802);
-\end{tikzpicture}
