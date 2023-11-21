@@ -147,20 +147,12 @@
 
 这里的状态转换，核心部分就是转义字符的处理。
 
-\begin{tikzpicture}[align=center, node distance=6em]
+\begin{tikzpicture}[align=center]
 	\node[state,initial]    (s001)               {$001$};
 	\node[state]            (s101)[right=of s001]{$101$};
-	\node[state, accepting] (s102)[right=of s101]{$102$};
-	\node[state, accepting] (s103)[below=2ex of s102]{$103$};
-	\node[state, accepting] (s104)[below=2ex of s103]{$104$};
-	\node[state, accepting] (s105)[below=2ex of s104]{$105$};
-	\node[state, accepting] (s106)[below=2ex of s105]{$106$};
-	\node[state, accepting] (s107)[below=2ex of s106]{$107$};
+	\node[state, accepting] (s102)[right=8em of s101]{$102$};
+	\node[state, accepting] (s103)[below=4ex of s101]{$103$};
 	\path[->](s001) edge node[above] {$\backslash$} (s101)
-	                edge[bend right] node[right] {other} (s107)
-	         (s101) edge node[above] {t} (s102)
-	                edge[bend right] node[above] {n} (s103)
-	                edge[bend right] node[above] {r} (s104)
-	                edge[bend right] node[above] {"} (s105)
-	                edge[bend right] node[above] {$\backslash$} (s106);
+	                edge node[right] {other} (s103)
+	         (s101) edge node[above] {t, n, r, ", $\backslash$} (s102);
 \end{tikzpicture}

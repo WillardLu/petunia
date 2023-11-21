@@ -14,4 +14,5 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 add_executable(training
                src/main.c
                src/file_handling/src/file_handling.c
-               src/lexical_analysis/src/lexical_analysis.c)
+               src/lexical_analysis/src/lexical_analysis.c
+               src/sqlite3/sqlite3.c)
