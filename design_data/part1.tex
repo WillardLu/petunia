@@ -4,16 +4,20 @@
   \includegraphics[width=\textwidth]{images/数据流图.png}
 \end{center}
 
-此图是使用drawio绘图工具绘制后导出的。
+此图由draw.io绘图工具绘制后导出。
 
 
-\chapter{词法分析}
+\chapter{设计}
 
 
-\section{状态转换图}
+
+\section{词法分析}
 
 
-\subsection{注释（comment）}
+\subsection{状态转换图}
+
+
+\subsubsection{注释（comment）}
 \noindent
 \begin{tikzpicture}[node distance=9em, align=center]
   \node[state,initial]    (s001)               {$001$};
@@ -26,7 +30,7 @@
 \end{tikzpicture}
 
 
-\subsection{祼键（bare key）}
+\subsubsection{祼键（bare key）}
 \noindent
 \begin{tikzpicture}[align=center]
   \node[state,initial]    (s001)               {$001$};
@@ -39,7 +43,7 @@
 \end{tikzpicture}
 
 
-\subsection{运算符}
+\subsubsection{运算符}
 等号（＝）：
 
 \noindent
@@ -53,7 +57,7 @@
 \end{tikzpicture}
 
 
-\subsection{字符串（string）}
+\subsubsection{字符串（string）}
 \noindent
 \begin{tikzpicture}[align=center]
   \node[state,initial]    (s001)               {$001$};
@@ -71,7 +75,7 @@
 按照当前的实际需要，暂时不支持多行字符串，另外转义字符目前也只支持反斜杠和双引号。
 
 
-\subsection{整数（integer）}
+\subsubsection{整数（integer）}
 \noindent
 \begin{tikzpicture}[align=center]
   \node[state,initial]    (s001)               {$001$};
@@ -89,7 +93,7 @@
 目前暂时不支持16进制、8进制。
 
 
-\subsection{浮点数（fractional）}
+\subsubsection{浮点数（fractional）}
 \noindent
 \begin{tikzpicture}[align=center]
   \node[state,initial]    (s001)               {$001$};
@@ -116,7 +120,7 @@
 \end{tikzpicture}
 
 
-\subsection{界符}
+\subsubsection{界符}
 左中括号：
 
 \begin{tikzpicture}[align=center]
@@ -151,7 +155,7 @@
 \end{tikzpicture}
 
 
-\section{用于TOML状态转换表解析的状态转换图}
+\subsection{用于TOML状态转换表解析的状态转换图}
 这个标题有些绕，实际对应的是上一节的内容。上一节的状态转换图最后是要用一张状态转换表（这里使用CSV文件）来实现的，那么这张表在程序读入时，需要把表文件中的内容转换保存在C语言的数组中。但是，因为这张表文件的内容会包含不能被直接转换的内容，比如一些不可见的控制字符，所以就需要做一些加工转换。这样一来，在我们的程序中就又增加了一个词法分析，只是比较简单，并且在具体实现时将不再把这个转换规则以外部文件的形式存放，而是直接编写在程序中。
 
 这里的状态转换，核心部分就是转义字符的处理。
