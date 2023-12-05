@@ -1,6 +1,10 @@
 \appendix
 
 
+\chapter{PCRE的简单使用方法}
+C语言处理正则表达式时一般可以选择POSIX（Portable Operating System Interface，是一种跨平台标准）的regex.h或PCRE（Perl Compatible Regular Expressions）的pcre.h。因为PCRE易用、功能强大，性能超过了POSIX，所以在本项目中使用PCRE来处理正则表达式。
+
+
 \chapter{开发日记}
 
 
@@ -71,3 +75,5 @@ Windows系统和Linux系统在文本处理上是有些差异的，其中的换�
 
 \subsection{12月03日}
 对于本项目在需求分析阶段的工具，我选用了数据流图（DFD），原因大家一看就明白。另外，在绘制DFD时，我用的是draw.io工具，没有使用tikz。这是因为tikz中并没有DFD方面的专用库，需要自己手动去绘制，稍显麻烦。
+
+以前说过词法分析对应的状态转换表，表里面的字符在具体实现时用的是正则表达式的判断字符串。这样一来，实际上就不再需要针对状态转换表的进一步解析。
