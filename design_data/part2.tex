@@ -134,6 +134,32 @@ int pcre_exec(const pcre *code,
 \end{itemize}
 
 
+\chapter{PCRE的正则表达式规则}
+\begin{center}
+\includegraphics[width=\textwidth]{images/pcre.png}
+\end{center}
+
+测试正则表达式的网站：\href{https://www.debuggex.com/?flavor=pcre#cheatsheet}{DebuggexBeta}
+
+
+\chapter{SQLite的简单使用方法}
+
+
+\section{在Ubuntu22.04上安装SQLite}
+使用如下命令进行安装：
+\begin{minted}[linenos=true,frame=single,breaklines]{console}
+sudo apt install sqlite3
+sudo apt install libsqlite3-dev
+\end{minted}
+
+注意，第1行命令实际上只是提供了一个终端调试界面；要想在程序中使用SQLite，必须运行第2个命令来安装相关库，然后我们的C语言代码中的“\#include <sqlite3.h>”才能找到所需文件。
+
+为了更方便操作SQLite，可以安装下面这个工具：
+\begin{minted}[linenos=true,frame=single,breaklines]{console}
+sudo apt install sqlitebrowser
+\end{minted}
+
+
 \chapter{开发日记}
 
 
