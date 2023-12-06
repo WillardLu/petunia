@@ -5,6 +5,135 @@
 C语言处理正则表达式时一般可以选择POSIX（Portable Operating System Interface，是一种跨平台标准）的regex.h或PCRE（Perl Compatible Regular Expressions）的pcre.h。因为PCRE易用、功能强大，性能超过了POSIX，所以在本项目中使用PCRE来处理正则表达式。
 
 
+\section{在Ubuntu 22.04上安装}
+安装命令如下：
+
+sudo apt install libpcre3 libpcre3-dev
+
+
+\section{头文件与构建参数}
+代码如下：
+\begin{minted}[linenos=true,frame=single,breaklines]{c}
+...
+#include <pcre.h>
+...
+\end{minted}
+
+CMakeLists.txt文件中的配置：
+\begin{minted}[linenos=true,frame=single,breaklines]{cmake}
+target_link_libraries(pcre_test
+                      pcre)
+\end{minted}
+
+
+\section{基础使用方法}
+示例代码：
+\begin{minted}[linenos=true,frame=single,breaklines]{c}
+// @copyright Copyright 2023 Willard Lu
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
+
+#include <stdio.h>
+#include <string.h>
+#include <pcre.h>
+
+int main() {
+  pcre *re; // 保存编译后的正则表达式
+  const char *error; // 保存错误信息
+  int erroffset; // 保存错误位置
+  int rc; // 保存匹配串的偏移位置
+  const char *pattern = "-.+[a]+."; // 示例用正则表达式
+  // 1. 编译正则表达式
+  re = pcre_compile(pattern, 0, &error, &erroffset, NULL);
+  if (re == NULL) {
+    // 输出错误信息
+    fprintf(stderr, "PCRE compilation failed at offset %d: %s\n", erroffset, error);
+    return 1;
+  }
+  // 2. 模式匹配
+  const char *subject = "--===abcfooabcfoo";
+  rc = pcre_exec(re, NULL, subject, strlen(subject), 0, 0, NULL, 0);
+  if (rc < 0) {
+    if (rc == PCRE_ERROR_NOMATCH) {
+      printf("No match\n");
+    }
+    else {
+      printf("PCRE execution failed at offset %d: %d\n", erroffset, rc);
+    }
+    pcre_free(re);
+    return 1;
+  }
+  printf("Matched %d groups\n", rc);
+  // 释放内存
+  pcre_free(re);
+  return 0;
+}
+\end{minted}
+
+从以上代码可以看到简单使用方法的步骤为：
+\begin{enumerate}
+\item 为了更高效地处理正则表达式，需要先把正则表达式字符串进行编译。为此要定义一个pcre结构的指针用于存放编译结果。
+\item 按惯例定义相关变量，包括错误信息、错误位置、匹配串偏移位置。
+\item 定义并赋值正则表达式字符串。在本项目中，这个由外部提供。
+\item 使用pcre\_compile()函数编译正则表达式。
+\item 使用pcre\_exec()函数进行模式匹配。
+\item 释放第一步定义的pcre结构指针指向的内存空间。
+\end{enumerate}
+
+上述步骤只是最基本的，实际上还应按照示例程序中所示添加一些错误判断处理的代码。
+
+\subsection{pcre\_compile() 函数}
+原型：
+\begin{minted}[linenos=true,frame=single,breaklines]{c}
+pcre *pcre_compile(const char *pattern,
+                   int options,
+                   const char **errptr,
+                   int *erroffset,
+                   const unsigned char *tableptr);
+\end{minted}
+
+功能：将一个正则表达式编译成一个内部表示，在匹配多个字符串时，可以加速匹配。
+
+参数：
+\begin{itemize}
+\item pattern正则表达式；
+\item options为0，或者其他参数选项；
+\item errptr出错消息；
+\item erroffset出错位置；
+\item tableptr指向一个字符数组的指针，可以设置为空NULL。
+\end{itemize}
+
+
+\subsection{pcre\_exec() 函数}
+原型：
+\begin{minted}[linenos=true,frame=single,breaklines]{c}
+int pcre_exec(const pcre *code,
+              const pcre_extra *extra,
+              const char *subject,
+              int length,
+              int startoffset,
+              int options,
+              int *ovector,
+              int ovecsize);
+\end{minted}
+
+功能：该函数使用与 Perl 类似的匹配算法，将已编译的正则表达式与给定主题字符串进行匹配。它会返回捕获子串的偏移量。
+
+参数：
+\begin{itemize}
+\item code：指向提供的正则表达式编译后的模式；
+\item extra：指向相关的 pcre[16|32]\_extra 结构、可为 NULL；
+\item subject：需要匹配的字符串；
+\item length：待匹配字符串的长度（字节）；
+\item startoffset：匹配的开始位置；
+\item options：选项位；
+\item ovector：指向一个结果的整型数组；
+\item ovecsize：数组大小（应为3的整数倍）。
+\end{itemize}
+
+
 \chapter{开发日记}
 
 
