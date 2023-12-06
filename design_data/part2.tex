@@ -160,6 +160,100 @@ sudo apt install sqlitebrowser
 \end{minted}
 
 
+\section{C语言中调用SQLite的方法}
+一方面，在C语言程序中添加以下代码：
+\begin{minted}[linenos=true,frame=single,breaklines]{c}
+#include <sqlite3.h>
+\end{minted}
+
+另一方面，在CMakeLists.txt文件中添加以下代码：
+\begin{minted}[linenos=true,frame=single,breaklines]{cmake}
+target_link_libraries(sqlite_c_test
+                      sqlite3)
+\end{minted}
+
+
+\section{如何在代码中执行SQL的查询命令}
+因为本项目中只有对SQLite数据库的查询操作，所以就不谈论其他操作。另外，关于SQLite数据库创建、表创建、添加记录等操作，将直接使用sqlitebrowser工具来完成，程序中不处理。
+
+这里介绍两种方法，一种是使用 sqlite3\_exec() 函数，另一种是使用 sqlite3\_prepare\_v2() 函数。下面直接列出完整代码：
+\begin{minted}[linenos=true,frame=single,breaklines]{c}
+// @copyright Copyright 2023 Willard Lu
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
+
+#include <sqlite3.h>
+#include <stdio.h>
+
+int Callback(void *, int, char **, char **);
+
+int main() {
+  sqlite3 *db;
+  char *err_msg = 0;
+
+  // 1. 打开数据库
+  int rc = sqlite3_open("test1.db", &db);
+  if (rc != SQLITE_OK) {
+    fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+    sqlite3_close(db);
+    return 1;
+  }
+
+  // 2. 执行sql命令
+  char *sql = "select * from t1";
+
+  // 使用sqlite3_exec()函数来执行sql命令
+  rc = sqlite3_exec(db, sql, Callback, 0, &err_msg);
+  if (rc != SQLITE_OK) {
+    fprintf(stderr, "Failed to select data\n");
+    fprintf(stderr, "SQL error: %s\n", err_msg);
+    sqlite3_free(err_msg);
+    sqlite3_close(db);
+    return 1;
+  }
+
+  // 使用sqlite3_prepare_v2预编译命令来执行sql命令
+  sqlite3_stmt *res;
+  rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+  if (rc == SQLITE_OK) {
+    sqlite3_bind_int(res, 1, 3);
+  } else {
+    fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+  }
+  int step = 0;
+  while (1) {
+    step = sqlite3_step(res); // 查询一步
+    if (step == SQLITE_ROW) {
+      printf("%s: ", sqlite3_column_text(res, 0));
+      printf("%s\n", sqlite3_column_text(res, 1));
+    } else {
+      break;
+    }
+  }
+
+  sqlite3_finalize(res); // 销毁预编译对象
+  sqlite3_close(db); // 关闭数据库
+  return 0;
+}
+
+// 回调函数
+int Callback(void *NotUsed, int argc, char **argv, char **azColName) {
+  NotUsed = 0;
+  for (int i = 0; i < argc; i++) {
+    printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+  }
+  printf("\n");
+  return 0;
+}
+\end{minted}
+
+从代码中可以看到，第1种方法会使用到回调函数，但这里有一个问题，就是来自数据库的数据如何更好的传递给调用程序。我们看到来自数据库的数据在回调函数中，如果想传给调用程序，似乎只能使用全局变量（回调函数不能修改参数），这显然不好。第2种方法可以妥善处理好这个问题，因此，目前使用第2种方法来获取从数据库中查询到的数据。
+
+本章内容写得比较简单，因为这里的资料并非本项目的主线内容，详细讨论的话会需要很多时间和精力，暂无必要。这种情况在综合性项目中表现尤其突出。人的精力毕竟有限，不可能面面俱到，以后最好交由人工智能助手来整理总结归纳。
+
+
 \chapter{开发日记}
 
 
