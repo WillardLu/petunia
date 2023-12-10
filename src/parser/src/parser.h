@@ -3,8 +3,10 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
-#ifndef LEXICAL_ANALYSIS_SRC_LEXICAL_ANALYSYS_H_
-#define LEXICAL_ANALYSYS_SRC_LEXICAL_ANALYSYS_H_
+#ifndef PARSER_SRC_PARSER_H_
+#define PARSER_SRC_PARSER_H_
+
+#include "toml.h"
 
 
-#endif  // LEXICAL_ANALYSYS_SRC_LEXICAL_ANALYSYS_H_
+#endif  // PARSER_SRC_PARSER_H_
